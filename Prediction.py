@@ -35,7 +35,7 @@ class OCR(Resources):
             area = cv2.contourArea(c)
             if area > min_area:
                 x,y,w,h = cv2.boundingRect(c)
-                bound = cv2.rectangle(IMG_KA, (x, y), (x + w, y + h), (36,255,12), 2)
+                bound = cv2.rectangle(im_src, (x, y), (x + w, y + h), (36,255,12), 2)
                 img_part = im_src[y:y+h, x:x+w]
                 img_obtained.append(img_part)
 
