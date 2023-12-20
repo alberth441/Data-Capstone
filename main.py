@@ -7,7 +7,7 @@ import os
 
 
 from Prediction import Prediction
-from Opening import Opening
+
 
 app = Flask(__name__)
 api=Api(app)
