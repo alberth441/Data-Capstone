@@ -5,7 +5,7 @@ from tensorflow.keras.models import load_model
 import tensorflow as tf
 import numpy as np
 import cv2
-from api_model.Basuwara import Basuwara
+import Basuwara
 
 class Prediction(Resource):
     #Defining MOdel and label 

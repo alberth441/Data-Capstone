@@ -6,7 +6,7 @@ from tensorflow import keras
 import os
 
 
-from api_model.Prediction import Prediction
+from Prediction import Prediction
 from Opening import Opening
 
 app = Flask(__name__)
