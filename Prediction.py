@@ -3,14 +3,11 @@ from flask import Flask, request, jsonify
 from flask_restful import Api, Resource
 from tensorflow.keras.models import load_model
 import tensorflow as tf
-from imutils.contours import sort_contours
 import numpy as np
-import argparse
-import imutils
 import cv2
-import Basuwara
+from api_model.Basuwara import Basuwara
 
-class OCR(Resources):
+class Prediction(Resource):
     #Defining MOdel and label 
     def __init__(self):
         self.model=Basuwara.MODEL
@@ -52,21 +49,42 @@ class OCR(Resources):
 
     def predict_single_image(self,im):
         pred_model=self.model
+        print(f'Default image: {im.shape}')
         im = tf.image.resize(im,(150,150))
+        print(f'Image before expnad dims predicted shape: {im.shape}')
         im = np.expand_dims(im,axis=0)
+        print(f'Image before predicted shape: {im.shape}')
         pred = pred_model.predict(im)
-        predicted_char = get_char(pred)
+        predicted_char = self.get_char(pred)
         return predicted_char
 
     def prediction_img(self,im):
-        img_modified = img_modifier(im)
-        bounded = get_bounding(im, img_modified)
+        img_modified = self.img_modifier(im)
+        print(f'Image mod shape: {img_modified.shape}')
+        bounded = self.get_bounding(im, img_modified)
         pred_text = []
         for images in bounded:
-            char = predict_single_image(images)
+            char = self.predict_single_image(images)
             pred_text.append(char)
 
         predicted = ''.join(pred_text)
 
         return predicted
+    
+    def get(self):
+        return {'error': 'GET method not allowed for this endpoint'}, 405
+
+    def post(self):
+        try:
+            if 'image' not in request.files:
+                response = {'error': 'no image found'}
+                return response
+            file = request.files['image']
+            im=cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_COLOR)
+            print(f'Image shape: {im.shape}')
+            predict = self.prediction_img(im)
+            predict_output = predict
+            return {"result": predict_output}
+        except Exception as error:
+            return {'error': str(error)}
 

@@ -7,13 +7,14 @@ import os
 
 
 from api_model.Prediction import Prediction
+from Opening import Opening
 
 app = Flask(__name__)
 api=Api(app)
 
-api.add_resources(Prediction,"/prediction")
+api.add_resource(Prediction,"/prediction",methods=['POST'])
 
 
-if __name__ == ' __main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+PORT = 5000
+if __name__ == '__main__':
+    app.run(debug = False, host='0.0.0.0', port=PORT)
